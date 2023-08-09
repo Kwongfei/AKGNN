@@ -25,22 +25,22 @@ parser.add_argument('--no-cuda', action='store_true', default=False,
 parser.add_argument('--fastmode', action='store_true', default=False,
                     help='Validate during training pass.')
 parser.add_argument('--seed', type=int, default=28, help='Random seed.')
-parser.add_argument('--epochs', type=int, default=10000,
+parser.add_argument('--epochs', type=int, default=5000,
                     help='Number of epochs to train.')
-parser.add_argument('--lr', type=float, default=0.05,
+parser.add_argument('--lr', type=float, default=0.01,
                     help='Initial learning rate.')
 parser.add_argument('--weight_decay', type=float, default=5e-4,
                     help='Weight decay (L2 loss on parameters).')
 parser.add_argument('--hidden', type=int, default=64,
                     help='Number of hidden units.')
 
-parser.add_argument('--dropout', type=float, default=0.6,
+parser.add_argument('--dropout', type=float, default=0.5,
                     help='Dropout rate (1 - keep probability).')
 parser.add_argument('--device', type=int, default=0,
                     help='which GPU to run')
 parser.add_argument('--early_patience', type=int, default=100,
                     help='which GPU to run')
-parser.add_argument('--layers', type=int, default=6)
+parser.add_argument('--layers', type=int, default=5)
 
 args = parser.parse_args()
 args.cuda = True #not args.no_cuda and torch.cuda.is_available()
@@ -92,12 +92,12 @@ def train(epoch):
 
     loss_val = F.nll_loss(output[idx_val], labels[idx_val])
     acc_val = accuracy(output[idx_val], labels[idx_val])
-    print('Epoch: {:04d}'.format(epoch+1),
-          'loss_train: {:.4f}'.format(loss_train.item()),
-          'acc_train: {:.4f}'.format(acc_train.item()),
-          'loss_val: {:.4f}'.format(loss_val.item()),
-          'acc_val: {:.4f}'.format(acc_val.item()),
-          'time: {:.4f}s'.format(time.time() - t))
+    # print('Epoch: {:04d}'.format(epoch+1),
+    #       'loss_train: {:.4f}'.format(loss_train.item()),
+    #       'acc_train: {:.4f}'.format(acc_train.item()),
+    #       'loss_val: {:.4f}'.format(loss_val.item()),
+    #       'acc_val: {:.4f}'.format(acc_val.item()),
+    #       'time: {:.4f}s'.format(time.time() - t))
     return loss_val
 
 def test():
@@ -105,35 +105,53 @@ def test():
     output = model(features, adj)
     loss_test = F.nll_loss(output[idx_test], labels[idx_test])
     acc_test = accuracy(output[idx_test], labels[idx_test])
-    print("Test set results under current model:",
-          "loss= {:.4f}".format(loss_test.item()),
-          "accuracy= {:.4f}".format(acc_test.item()))
+    # print("Test set results under current model:",
+    #       "loss= {:.4f}".format(loss_test.item()),
+    #       "accuracy= {:.4f}".format(acc_test.item()))
     return acc_test
 
 
 # initialize placeholders for early stopping
-best_val = torch.tensor(100.)
-best = None
-best_epoch = 0
-best_test = 0
-# Train model
-t_total = time.time()
-for epoch in range(args.epochs):
-    if epoch - best_epoch >= args.early_patience:
-        break
-    loss_val = train(epoch)
-    if loss_val < best_val:
-        best_epoch = epoch
-        try:
-            print(epoch, 'A BETTER VALIDATION FOUND:', best_val.detach().cpu().numpy(), '->', loss_val.detach().cpu().numpy())
-            best_test = test()
-            best = [float(layer.get_actual_lambda().detach().cpu().numpy()) for layer in model.layers]
-        except:
-            continue
-        best_val = loss_val
+result = []
+for _ in range(0,10):
+    best_val = torch.tensor(100.)
+    best = None
+    best_epoch = 0
+    best_test = 0
+    # Train model
+    t_total = time.time()
+    for epoch in range(args.epochs):
+        if epoch - best_epoch >= args.early_patience:
+            break
+        loss_val = train(epoch)
+        if loss_val < best_val:
+            best_epoch = epoch
+            try:
+                # print(epoch, 'A BETTER VALIDATION FOUND:', best_val.detach().cpu().numpy(), '->',
+                #       loss_val.detach().cpu().numpy())
+                best_test = test()
+                best = [float(layer.get_actual_lambda().detach().cpu().numpy()) for layer in model.layers]
+            except:
+                continue
+            best_val = loss_val
 
-print('Test ACC:', float(best_test.detach().cpu().numpy()))
-print('lambda max at each layer:')
-print(best)
-print("Optimization Finished!")
-print("Total time elapsed: {:.4f}s".format(time.time() - t_total))
+    print('Test ACC:', float(best_test.detach().cpu().numpy())*100)
+    print('lambda max at each layer:')
+    print(best)
+    print("Optimization Finished!")
+    print("Total time elapsed: {:.4f}s".format(time.time() - t_total))
+
+    result.append(best_test.detach().cpu().numpy())
+
+# result = np.ndarray(result)
+print(result)
+mean_result = np.mean(result)
+std_result = np.std(result)
+print('ACC:', mean_result*100)
+print('std:', std_result*100)
+
+filename = 'AKGNN_cora.txt'
+f = open(filename, 'a+')
+f.write('\\nn'+str(args))
+f.write('\nACC:' + str(mean_result*100))
+f.write('std:' + str(std_result*100))
