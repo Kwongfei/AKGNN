@@ -1,0 +1,13 @@
+\nnNamespace(cuda=True, device=2, dropout=0.2, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=6, lr=5e-06, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:18.2std:0.0\nnNamespace(cuda=True, device=2, dropout=0.2, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=6, lr=0.0005, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:65.46000000000001std:15.755075372717197\nnNamespace(cuda=True, device=2, dropout=0.2, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.005, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:70.63999999999999std:0.5276362383309128\nnNamespace(cuda=True, device=2, dropout=0.2, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.5, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:26.450000000000006std:8.535016110119535\nnNamespace(cuda=True, device=2, dropout=0.5, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=5e-06, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:57.940000000000005std:6.645780616300842\nnNamespace(cuda=True, device=2, dropout=0.5, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.0005, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:64.53999999999999std:2.06649461649432\nnNamespace(cuda=True, device=2, dropout=0.5, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.005, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:64.67999999999999std:2.706954007736373\nnNamespace(cuda=True, device=2, dropout=0.5, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.5, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:21.060000000000002std:4.164900959206594\nnNamespace(cuda=True, device=2, dropout=0.8, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=5e-06, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:52.94999999999999std:15.468952776448702\nnNamespace(cuda=True, device=2, dropout=0.8, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.0005, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:42.75000000000001std:10.084765738479003\nnNamespace(cuda=True, device=2, dropout=0.8, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.005, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:18.89std:2.160300904966714\nnNamespace(cuda=True, device=2, dropout=0.8, early_patience=100, epochs=10000, fastmode=False, hidden=64, layers=5, lr=0.5, no_cuda=False, seed=31, weight_decay=0.01)
+ACC:19.32std:2.5321137415211035
